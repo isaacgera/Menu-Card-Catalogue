@@ -2,7 +2,8 @@
 
 - **Project:** Menu Card Catalogue
 - **Tier / Category:** Medium / Work
-- **Status:** In Progress (code-complete; awaiting Isaac's browser/install sign-off)
+- **Status:** Deployed to 3 remotes (Pages live); v1.1 bundled auto-load added — awaiting sign-off once the real workbook is dropped in
+- **Version:** 1.1.0
 - **Owner / Copyright:** Isaac A Gera
 - **Last updated:** 2026-10-21
 
@@ -44,8 +45,14 @@ DOCX export.
 
 ## 4. Functional requirements
 
+- **R0 Bundled auto-load (v1.1).** If a Menu Card is shipped with the app at
+  `data/Middleware_Menu_Card.xlsx`, it is fetched + parsed + displayed automatically on launch,
+  so users don't each upload one. Precedence: a user's own **uploaded** card is kept; a **newer
+  bundled** card (detected by filename + version label + item count) refreshes anyone still on
+  the previous bundled card; falls back to the upload screen if the file is absent / `file://` /
+  offline-uncached. A header badge shows **Bundled** vs **Uploaded**.
 - **R1 Import.** Accept a single `.xlsx`. Reject other file types with a clear message. Read it
-  locally; never transmit it anywhere.
+  locally; never transmit it anywhere. A manual upload overrides the bundled card on that device.
 - **R2 Parse (faithful to MDP, component-agnostic).** Locate columns by **header text** (not
   fixed indices). **Every worksheet except `Version`/`Variables` is treated as a component**,
   keyed by its tab name — so a Menu Card with more or fewer components parses with no code change.

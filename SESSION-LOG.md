@@ -126,3 +126,44 @@ label/pill fallbacks. All three JS modules pass `node --check`.
 Confirmed decisions: same columns/cost-header convention; tab name as the component for unknown
 ones; data-driven sizes; required-column bar kept. Still **In Progress** pending Isaac's browser
 re-test (import a multi/variant-component card; serve over HTTP; hard-refresh for the SW).
+
+
+## 2026-10-21 (later) — v1.1.0: bundled Menu Card auto-load + deployed to 3 remotes
+
+### Deployment (done earlier this session)
+Pushed to all three remotes, in step on one commit, and GitLab/GitHub Pages confirmed live by
+Isaac:
+- Personal GitLab Pages: https://pages.gitlab.prod.ec.devops.nat.bt.com/menu-card-catalogue-51bab0
+- Team GitLab Pages: https://pages.gitlab.prod.ec.devops.nat.bt.com/menu-card-catalogue-6a9f73/
+- GitHub Pages: https://isaacgera.github.io/Menu-Card-Catalogue/index.html
+
+Remotes: `origin` (personal GitLab), `team` (team GitLab, `main` protected — so used a merge of
+its init commit rather than a force-push), `github`. `git pushall` keeps all three in sync.
+
+### v1.1.0 — auto-load a bundled Menu Card (precedence c)
+So users don't each upload a card, the app now ships one and loads it automatically.
+- **Bundled file:** `data/Middleware_Menu_Card.xlsx` (Isaac drops the real workbook in; a
+  `data/README.md` placeholder marks the folder + documents the yearly-update steps).
+- **Boot logic (precedence c):** a user's own **uploaded** card is always kept; otherwise fetch
+  + parse the bundled card and show it; if a previously-**bundled** catalogue's signature differs
+  from the bundled file (filename + version label + item count), refresh to the new one;
+  graceful fallback to the upload screen if the file is absent / `file://` / offline-uncached.
+- **store.js:** saved shape now carries `source: 'bundled'|'upload'` + a `signature`;
+  `makeSignature()` added.
+- **Header badge:** shows **Bundled** or **Uploaded** so it's clear which card is in view.
+- **Re-import:** clears storage and re-runs boot, so the bundled card auto-loads again (or the
+  upload screen appears if there's none).
+- **sw.js:** `CACHE_NAME` → `mcc-v3`; bundled card precached best-effort and served
+  **network-first** so a redeployed card is picked up next online load (cache fallback offline).
+- **.gitlab-ci.yml:** copies `data/` into `public/` if present.
+- Version constant `APP_VERSION = '1.1.0'` in app.js.
+
+### Verified
+All changed JS passes `node --check`. (Parser unchanged this round; its real-workbook pass from
+the component-agnostic work still stands.) MDP untouched.
+
+### Note for Isaac
+- Drop the real `Middleware_Menu_Card.xlsx` into `data/` before the auto-load does anything on
+  the live sites — until then each site shows the upload screen (graceful fallback).
+- After dropping it in: `git add data/Middleware_Menu_Card.xlsx`, commit, `git pushall`. On the
+  installed PWA, fully close/reopen to pick up the new service worker (`mcc-v3`).

@@ -6,7 +6,10 @@ parses it **entirely in the browser** (no server), and shows a searchable / filt
 Middleware Delivery Portal (MDP) so the "just view the catalogue" need stays simple.
 
 ## Features
-- Import a Menu Card `.xlsx` (drag-drop or picker) — parsed on the device, nothing uploaded
+- **Auto-loads a bundled Menu Card** (`data/Middleware_Menu_Card.xlsx`) so users just open the
+  app and see the catalogue — no upload needed
+- Import a Menu Card `.xlsx` (drag-drop or picker) — parsed on the device, nothing uploaded;
+  a user's own upload overrides the bundled card on their device
 - **Component-agnostic**: any component tabs (not just MQ/WLS/CFT/WildFly) are read; sizes and
   filters are driven by whatever the workbook contains
 - Searchable, filterable catalogue (Component / Size pills + generic search)
@@ -24,6 +27,18 @@ PWA features (service worker, install) need HTTP, not `file://`. From this folde
 python -m http.server
 ```
 then open the URL it prints. (Plain file open works for everything except install/offline.)
+
+## Bundled Menu Card (auto-load)
+
+Place the current workbook at **`data/Middleware_Menu_Card.xlsx`** and it deploys with the site
+and auto-loads for every user on launch (precedence: a user's own uploaded card is kept; a
+newer bundled card — detected by filename + version label + item count — refreshes anyone who
+was on the previous bundled card; falls back to the upload screen if the file is absent).
+
+**Updating the card (≈ once a year):**
+1. Drop the new workbook in `data/`, keeping the exact name `Middleware_Menu_Card.xlsx`.
+2. Bump `CACHE_NAME` in `sw.js` (e.g. `mcc-v3` → `mcc-v4`) so clients fetch the new file.
+3. `git add` + commit + `git pushall`.
 
 ## Deployment
 

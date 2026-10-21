@@ -4,8 +4,14 @@
  */
 import { parseXlsx } from './xlsx-reader.js';
 import { parseMenuCard, componentLabel, componentPill } from './parser.js';
-import { loadCatalogue, saveCatalogue, clearCatalogue, loadTheme, saveTheme } from './store.js';
+import { loadCatalogue, saveCatalogue, clearCatalogue, loadTheme, saveTheme, makeSignature } from './store.js';
 import { exportCataloguePdf } from './pdf.js';
+
+const APP_VERSION = '1.1.0';
+// A Menu Card shipped WITH the app. If present, it auto-loads so users don't each upload one.
+// Drop the current workbook here and redeploy; precedence-(c) picks it up (see boot()).
+const BUNDLED_CARD_URL = './data/Middleware_Menu_Card.xlsx';
+const BUNDLED_CARD_NAME = 'Middleware_Menu_Card.xlsx';
 
 // Preferred ordering for the well-known components + sizes. Anything not listed is still shown —
 // unknown components are appended (alphabetically) and unknown sizes sort after the known ladder.
@@ -65,13 +71,60 @@ const selSizes = new Set();
 let searchText = '';
 
 // ============================================================
-// Boot
+// Boot — precedence (c): bundled card auto-loads; a newer bundled card refreshes a
+// previously-bundled catalogue; a user's own upload is kept; graceful fallback to upload.
 // ============================================================
-function boot() {
+async function boot() {
   initTheme();
-  catalogue = loadCatalogue();
-  render();
   registerServiceWorker();
+
+  const stored = loadCatalogue();
+
+  // If the user has their OWN uploaded card, always respect it (they chose it).
+  if (stored && stored.source === 'upload' && stored.items && stored.items.length) {
+    catalogue = stored;
+    render();
+    return;
+  }
+
+  // Try the bundled card (fetch only works over HTTP, not file://).
+  let bundled = null;
+  try {
+    bundled = await fetchBundledCatalogue();
+  } catch { /* no bundled card / offline-uncached / file:// — handled below */ }
+
+  if (bundled) {
+    // Precedence (c): load bundled if nothing stored, OR if the bundled signature differs
+    // from a previously-bundled catalogue (i.e. a newer card was dropped in).
+    if (!stored || stored.source === 'bundled' && stored.signature !== bundled.signature) {
+      catalogue = bundled;
+      saveCatalogue(catalogue);
+      render();
+      return;
+    }
+  }
+
+  // Otherwise use whatever was stored (unchanged bundled or nothing).
+  catalogue = stored;
+  render();
+}
+
+/** Fetch + parse the bundled Menu Card. Returns a catalogue object, or null if unavailable. */
+async function fetchBundledCatalogue() {
+  const res = await fetch(BUNDLED_CARD_URL, { cache: 'no-cache' });
+  if (!res.ok) return null;
+  const buf = await res.arrayBuffer();
+  if (!buf || buf.byteLength === 0) return null;
+  const workbook = await parseXlsx(buf);
+  const result = parseMenuCard(workbook, { sourceFilename: BUNDLED_CARD_NAME });
+  if (!result.items.length) return null;
+  return {
+    version: result.version,
+    items: result.items,
+    counts: result.counts,
+    source: 'bundled',
+    signature: makeSignature(result.version, result.items),
+  };
 }
 
 function initTheme() {
@@ -114,7 +167,7 @@ function renderUpload(main) {
   main.innerHTML = `
     <section class="card upload-card">
       <h1>Import a Menu Card</h1>
-      <p class="muted">Upload the Menu Card Excel workbook (.xlsx). It is read entirely on this device — nothing is uploaded to any server.</p>
+      <p class="muted">No bundled Menu Card was found, so choose a workbook (.xlsx) to view. It is read entirely on this device — nothing is uploaded to any server.</p>
       <div id="drop" class="dropzone" tabindex="0" role="button" aria-label="Choose or drop a Menu Card .xlsx file">
         <input id="file" type="file" accept=".xlsx" hidden />
         <div class="dropzone-inner">
@@ -155,7 +208,13 @@ async function handleFile(f) {
         ${result.warnings.map((w) => `<div class="muted">• ${esc(w)}</div>`).join('')}</div>`;
       return;
     }
-    catalogue = { version: result.version, items: result.items, counts: result.counts };
+    catalogue = {
+      version: result.version,
+      items: result.items,
+      counts: result.counts,
+      source: 'upload', // a user-chosen card — kept across refreshes, overrides the bundled one
+      signature: makeSignature(result.version, result.items),
+    };
     saveCatalogue(catalogue);
     const total = result.items.length;
     const byComp = Object.entries(result.counts).map(([c, n]) => `${compLabelShort(c)}: ${n}`).join(', ');
@@ -201,7 +260,10 @@ function renderCatalogue(main) {
     <div class="cat-head">
       <div>
         <h1>Product Catalogue</h1>
-        <p class="muted" style="margin-top:4px;">Source: <strong>${esc(v.sourceFilename || 'Menu Card')}</strong>${fy} · ${catalogue.items.length} services</p>
+        <p class="muted" style="margin-top:4px;">
+          Source: <strong>${esc(v.sourceFilename || 'Menu Card')}</strong>${fy} · ${catalogue.items.length} services
+          <span class="badge source-badge">${catalogue.source === 'upload' ? 'Uploaded' : 'Bundled'}</span>
+        </p>
       </div>
       <div class="cat-head-actions">
         <button type="button" class="btn-primary" id="pdf-btn">Save as PDF</button>
@@ -240,10 +302,15 @@ function renderCatalogue(main) {
     if (detail) detail.innerHTML = ''; // also close any open line-item detail panel
     buildPills(main); renderTable(main);
   });
-  $('#reimport-btn').addEventListener('click', () => {
-    if (window.confirm('Re-import a Menu Card? This replaces the current catalogue on this device.')) {
-      clearCatalogue(); catalogue = null; render();
-    }
+  $('#reimport-btn').addEventListener('click', async () => {
+    const msg = catalogue && catalogue.source === 'upload'
+      ? 'Replace your uploaded card? This clears it; the bundled Menu Card (if present) loads instead, or you can upload another.'
+      : 'Re-import a Menu Card? This replaces the current catalogue on this device.';
+    if (!window.confirm(msg)) return;
+    clearCatalogue();
+    catalogue = null;
+    // Re-run boot so the bundled card auto-loads again if present; otherwise the upload screen.
+    await boot();
   });
   $('#pdf-btn').addEventListener('click', onExportPdf);
 

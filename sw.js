@@ -7,7 +7,7 @@
  * Bump CACHE_NAME on every release so clients pick up new assets (a cache-first SW otherwise
  * keeps serving stale files). On iPhone, fully close + reopen the installed app after an update.
  */
-const CACHE_NAME = 'mcc-v2';
+const CACHE_NAME = 'mcc-v3';
 
 const CORE = [
   './',
@@ -26,7 +26,12 @@ const OPTIONAL = [
   './vendor/jspdf.umd.min.js',
   './icons/icon.svg',
   './icons/icon-maskable.svg',
+  './data/Middleware_Menu_Card.xlsx', // bundled Menu Card (auto-loaded); may not exist — best-effort
 ];
+
+// The bundled Menu Card is served NETWORK-FIRST so a newly dropped-in card is picked up on the
+// next online load (then cached for offline). Everything else stays cache-first.
+const NETWORK_FIRST = ['/data/Middleware_Menu_Card.xlsx'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
@@ -48,6 +53,27 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
+
+  // Network-first for the bundled Menu Card so a redeployed card is seen; fall back to cache offline.
+  const path = new URL(request.url).pathname;
+  if (NETWORK_FIRST.some((p) => path.endsWith(p))) {
+    event.respondWith((async () => {
+      try {
+        const res = await fetch(request);
+        if (res && res.ok && new URL(request.url).origin === self.location.origin) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(request, res.clone());
+        }
+        return res;
+      } catch {
+        const cached = await caches.match(request);
+        if (cached) return cached;
+        throw new Error('bundled card offline and not cached');
+      }
+    })());
+    return;
+  }
+
   event.respondWith((async () => {
     const cached = await caches.match(request);
     if (cached) return cached;

@@ -177,3 +177,6 @@ h2 { font-size: var(--fs-lg); }
 @media print {
   .no-print, .app-header, .cat-head-actions, .cat-controls, #detail { display: none !important; }
 }
+
+/* which card is loaded — bundled (shipped with the app) vs uploaded (user-chosen) */
+.source-badge { margin-left: var(--space-2); border-color: var(--primary); color: var(--primary); }
