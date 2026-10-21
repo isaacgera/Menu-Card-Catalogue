@@ -7,7 +7,7 @@
  * Bump CACHE_NAME on every release so clients pick up new assets (a cache-first SW otherwise
  * keeps serving stale files). On iPhone, fully close + reopen the installed app after an update.
  */
-const CACHE_NAME = 'mcc-v3';
+const CACHE_NAME = 'mcc-v4';
 
 const CORE = [
   './',

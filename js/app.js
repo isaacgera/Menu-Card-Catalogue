@@ -7,7 +7,7 @@ import { parseMenuCard, componentLabel, componentPill } from './parser.js';
 import { loadCatalogue, saveCatalogue, clearCatalogue, loadTheme, saveTheme, makeSignature } from './store.js';
 import { exportCataloguePdf } from './pdf.js';
 
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.1.1';
 // A Menu Card shipped WITH the app. If present, it auto-loads so users don't each upload one.
 // Drop the current workbook here and redeploy; precedence-(c) picks it up (see boot()).
 const BUNDLED_CARD_URL = './data/Middleware_Menu_Card.xlsx';
@@ -66,6 +66,7 @@ function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTi
 
 // ---- state ----
 let catalogue = null;              // { version, items, counts }
+let forceUpload = false;           // when true, render() shows the upload screen (Re-import)
 const selComponents = new Set();
 const selSizes = new Set();
 let searchText = '';
@@ -153,7 +154,7 @@ function registerServiceWorker() {
 // ============================================================
 function render() {
   const main = $('#view');
-  if (!catalogue || !catalogue.items || !catalogue.items.length) {
+  if (forceUpload || !catalogue || !catalogue.items || !catalogue.items.length) {
     renderUpload(main);
   } else {
     renderCatalogue(main);
@@ -164,10 +165,14 @@ function render() {
 // Upload screen
 // ============================================================
 function renderUpload(main) {
+  const hasExisting = !!(catalogue && catalogue.items && catalogue.items.length);
+  const intro = hasExisting
+    ? 'Choose a different Menu Card workbook (.xlsx) to view. It replaces the current one on this device only (nothing is uploaded to any server).'
+    : 'Choose a Menu Card workbook (.xlsx) to view. It is read entirely on this device — nothing is uploaded to any server.';
   main.innerHTML = `
     <section class="card upload-card">
-      <h1>Import a Menu Card</h1>
-      <p class="muted">No bundled Menu Card was found, so choose a workbook (.xlsx) to view. It is read entirely on this device — nothing is uploaded to any server.</p>
+      <h1>${hasExisting ? 'Import a different Menu Card' : 'Import a Menu Card'}</h1>
+      <p class="muted">${intro}</p>
       <div id="drop" class="dropzone" tabindex="0" role="button" aria-label="Choose or drop a Menu Card .xlsx file">
         <input id="file" type="file" accept=".xlsx" hidden />
         <div class="dropzone-inner">
@@ -176,8 +181,14 @@ function renderUpload(main) {
         </div>
       </div>
       <div id="import-status" class="import-status" aria-live="polite"></div>
+      ${hasExisting ? '<p style="margin-top:var(--space-4);"><a href="#" id="back-link">← Back to catalogue</a></p>' : ''}
     </section>
   `;
+
+  if (hasExisting) {
+    const back = $('#back-link');
+    if (back) back.addEventListener('click', (e) => { e.preventDefault(); forceUpload = false; render(); });
+  }
 
   const drop = $('#drop');
   const file = $('#file');
@@ -220,6 +231,7 @@ async function handleFile(f) {
     const byComp = Object.entries(result.counts).map(([c, n]) => `${compLabelShort(c)}: ${n}`).join(', ');
     statusEl.innerHTML = `<p class="import-ok">Imported ${total} services (${esc(byComp)}).</p>`;
     // reset filters and show the catalogue
+    forceUpload = false;
     selComponents.clear(); selSizes.clear(); searchText = '';
     setTimeout(render, 400);
   } catch (err) {
@@ -302,15 +314,12 @@ function renderCatalogue(main) {
     if (detail) detail.innerHTML = ''; // also close any open line-item detail panel
     buildPills(main); renderTable(main);
   });
-  $('#reimport-btn').addEventListener('click', async () => {
-    const msg = catalogue && catalogue.source === 'upload'
-      ? 'Replace your uploaded card? This clears it; the bundled Menu Card (if present) loads instead, or you can upload another.'
-      : 'Re-import a Menu Card? This replaces the current catalogue on this device.';
-    if (!window.confirm(msg)) return;
-    clearCatalogue();
-    catalogue = null;
-    // Re-run boot so the bundled card auto-loads again if present; otherwise the upload screen.
-    await boot();
+  $('#reimport-btn').addEventListener('click', () => {
+    // Show the upload screen with the file picker so a different .xlsx can be chosen.
+    // (We keep the stored catalogue until a new file is successfully imported, so Cancelling
+    // via the "Back to catalogue" link leaves the current view intact.)
+    forceUpload = true;
+    render();
   });
   $('#pdf-btn').addEventListener('click', onExportPdf);
 

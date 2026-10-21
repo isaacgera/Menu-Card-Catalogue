@@ -2,8 +2,8 @@
 
 - **Project:** Menu Card Catalogue
 - **Tier / Category:** Medium / Work
-- **Status:** Deployed to 3 remotes (Pages live); v1.1 bundled auto-load added — awaiting sign-off once the real workbook is dropped in
-- **Version:** 1.1.0
+- **Status:** Deployed to 3 remotes (Pages live); v1.1 bundled auto-load + v1.1.1 Re-import fix — awaiting live-site sign-off
+- **Version:** 1.1.1
 - **Owner / Copyright:** Isaac A Gera
 - **Last updated:** 2026-10-21
 

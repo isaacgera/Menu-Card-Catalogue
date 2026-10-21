@@ -167,3 +167,32 @@ the component-agnostic work still stands.) MDP untouched.
   the live sites — until then each site shows the upload screen (graceful fallback).
 - After dropping it in: `git add data/Middleware_Menu_Card.xlsx`, commit, `git pushall`. On the
   installed PWA, fully close/reopen to pick up the new service worker (`mcc-v3`).
+
+
+## 2026-10-21 (later) — v1.1.1: fix Re-import
+
+**Bug (introduced by the v1.1 auto-load work):** Re-import popped a confirm dialog but never
+offered a file picker. Cause: Re-import cleared storage and re-ran `boot()`, which immediately
+re-fetched and loaded the bundled card — so the upload screen never appeared.
+
+**Fix:** Re-import now sets a `forceUpload` flag and renders the upload screen directly (with the
+working file picker), independent of the bundled auto-load. The upload screen adapts its wording
+when a catalogue already exists ("Import a different Menu Card") and shows a **← Back to
+catalogue** link so Re-import is cancellable without losing the current view. The stored
+catalogue is kept until a new file is successfully imported; on success `forceUpload` clears and
+the app returns to the catalogue. Removed the dead confirm dialog.
+
+Kept Re-import (it's useful for viewing a different card) rather than removing it, now that it
+works. `APP_VERSION` → 1.1.1; service worker `CACHE_NAME` → `mcc-v4`. app.js passes `node --check`.
+
+**To ship this fix to the live sites:** `git add` + commit + `git pushall`; then hard-refresh /
+reopen the installed PWA so the `mcc-v4` service worker activates.
+
+### Status at end of session
+Deployed to all three remotes (personal GitLab, team GitLab, GitHub); Pages live on all three.
+v1.1.1 code-complete and verified locally (node --check + real V5 workbook parses: 38 services,
+MQ XL £8,400.67). Backlog row stays **In Progress** pending Isaac's live-site confirmation of the
+auto-load + the Re-import fix; then → **Built (Menu Card Catalogue v1.1.1)**.
+
+> Session paused here (monthly credits). Next time: pull latest, confirm the three live sites
+> auto-load the bundled card and that Re-import now shows the picker, then flip the backlog to Built.
