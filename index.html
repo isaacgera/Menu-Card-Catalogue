@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a66c2" />
+  <meta name="description" content="Import a middleware Menu Card workbook and browse the Product Catalogue. Runs entirely on your device." />
+  <title>Menu Card Catalogue</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icons/icon.svg" />
+  <link rel="stylesheet" href="./styles/tokens.css" />
+  <link rel="stylesheet" href="./styles/app.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header-left">
+      <span class="app-logo" aria-hidden="true">MC</span>
+      <span class="app-title">Menu Card Catalogue</span>
+    </div>
+    <div class="app-header-right">
+      <button id="theme-toggle" class="btn-ghost" type="button" title="Toggle light / dark" aria-label="Toggle light or dark theme">◐</button>
+    </div>
+  </header>
+
+  <main id="view" class="app-main">Loading…</main>
+
+  <footer class="app-footer no-print">
+    <span class="app-footer-brand">Powered by Forjé</span>
+    <span class="app-footer-copy">&copy; 2026 Isaac A Gera. All rights reserved.</span>
+  </footer>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

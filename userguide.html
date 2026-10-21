@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Menu Card Catalogue — User Guide</title>
+<style>
+  :root{
+    --bg:#f6f7f9;--surface:#fff;--border:#d9dde3;--text:#1a2430;--muted:#5a6675;--primary:#0a66c2;
+  }
+  @media (prefers-color-scheme:dark){:root{--bg:#12171e;--surface:#1a212b;--border:#2e3844;--text:#e8edf3;--muted:#a9b4c0;--primary:#4a9eea;}}
+  *{box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;max-width:820px;margin:0 auto;padding:1.5rem}
+  h1{color:var(--primary);font-size:1.5rem;margin-bottom:.2rem}
+  h2{font-size:1.15rem;margin-top:1.6rem}
+  .sub{color:var(--muted);margin-bottom:1.2rem}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;box-shadow:0 1px 3px rgba(16,24,40,.08)}
+  ol,ul{padding-left:1.2rem}
+  li{margin:.3rem 0}
+  code{background:rgba(10,102,194,.1);padding:1px 6px;border-radius:4px;font-size:.9em}
+  .tip{border-left:3px solid var(--primary);padding-left:.8rem;color:var(--muted)}
+  footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:.75rem}
+  footer .brand{color:var(--primary);font-weight:600;display:block}
+</style>
+</head>
+<body>
+  <h1>Menu Card Catalogue</h1>
+  <div class="sub">User Guide</div>
+
+  <div class="card">
+    <p>Menu Card Catalogue is a small app that reads the middleware <strong>Menu Card</strong>
+    Excel workbook and shows it as a tidy, searchable <strong>Product Catalogue</strong>.
+    Everything happens <strong>on your own device</strong> — the file is never uploaded anywhere,
+    and the app works offline once loaded. You can install it like a normal app.</p>
+  </div>
+
+  <h2>1. Import a Menu Card</h2>
+  <ol>
+    <li>On the start screen, <strong>click the drop-zone</strong> and choose the Menu Card
+      <code>.xlsx</code>, or <strong>drag the file onto it</strong>.</li>
+    <li>The app reads it instantly and shows a summary — how many services were found for each
+      component (MQ, WLS, WFY, CFT). Any issues appear as warnings.</li>
+    <li>The catalogue opens automatically and is <strong>saved on this device</strong>, so it's
+      still there next time you open the app.</li>
+  </ol>
+  <p class="tip">The Menu Card usually changes about once a year — just use <strong>Re-import</strong>
+  (top right of the catalogue) to load the new one. It replaces the old catalogue after you confirm.</p>
+
+  <h2>2. Browse the catalogue</h2>
+  <ul>
+    <li><strong>Component / Size pills</strong> — tap to filter; tap more than one to combine;
+      "All" clears that row.</li>
+    <li><strong>Search box</strong> — type anything (a component, a size, words from a service,
+      a cost) and it matches across every column.</li>
+    <li><strong>Per-column filters</strong> — the small boxes under each column heading narrow
+      just that column.</li>
+    <li><strong>Clear</strong> resets search and filters. The count shows "X of N services".</li>
+    <li><strong>Click a row</strong> to open its full details (complete description and all
+      figures).</li>
+  </ul>
+
+  <h2>3. Save the catalogue as a PDF</h2>
+  <p>Click <strong>Save as PDF</strong> (top right). It builds a PDF of the <strong>whole</strong>
+  catalogue (all services, not just what's filtered on screen). On a computer it downloads; on a
+  phone it opens the share sheet so you can save it to Files or send it on.</p>
+
+  <h2>4. Install it as an app</h2>
+  <p>In your browser's menu choose <strong>Install</strong> (or "Add to Home Screen" on a phone).
+  It then opens in its own window and works offline.</p>
+
+  <h2>5. Theme</h2>
+  <p>Use the <strong>◐</strong> button in the header to switch light / dark; it follows your
+  device setting by default and remembers your choice.</p>
+
+  <footer>
+    <span class="brand">Powered by Forjé</span>
+    © 2026 Isaac A Gera. All rights reserved.
+  </footer>
+</body>
+</html>

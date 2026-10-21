@@ -1,0 +1,68 @@
+/**
+ * Service worker — offline-first precache. Split into:
+ *   CORE     — atomic addAll; if any of these fail, install fails (they're essential).
+ *   OPTIONAL — best-effort cache.add().catch(); a missing optional asset (e.g. a vendored lib
+ *              or an icon) must NOT fail the whole install and kill offline. (ios-pwa-patterns)
+ *
+ * Bump CACHE_NAME on every release so clients pick up new assets (a cache-first SW otherwise
+ * keeps serving stale files). On iPhone, fully close + reopen the installed app after an update.
+ */
+const CACHE_NAME = 'mcc-v2';
+
+const CORE = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './styles/tokens.css',
+  './styles/app.css',
+  './js/app.js',
+  './js/xlsx-reader.js',
+  './js/parser.js',
+  './js/store.js',
+  './js/pdf.js',
+];
+
+const OPTIONAL = [
+  './vendor/jspdf.umd.min.js',
+  './icons/icon.svg',
+  './icons/icon-maskable.svg',
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(CORE); // atomic — essential assets
+    await Promise.all(OPTIONAL.map((u) => cache.add(u).catch(() => { /* best-effort */ })));
+    self.skipWaiting();
+  })());
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)));
+    self.clients.claim();
+  })());
+});
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  if (request.method !== 'GET') return;
+  event.respondWith((async () => {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    try {
+      const res = await fetch(request);
+      // runtime-cache same-origin GETs so first-seen assets work offline next time
+      if (res && res.ok && new URL(request.url).origin === self.location.origin) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, res.clone());
+      }
+      return res;
+    } catch {
+      // offline and uncached — for navigations, fall back to the app shell
+      if (request.mode === 'navigate') return caches.match('./index.html');
+      throw new Error('offline and not cached');
+    }
+  })());
+});

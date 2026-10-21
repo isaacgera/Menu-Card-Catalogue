@@ -1,0 +1,15 @@
+{
+  "name": "Menu Card Catalogue",
+  "short_name": "Menu Card",
+  "description": "Import a middleware Menu Card workbook and browse the Product Catalogue. Runs entirely on your device.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f6f7f9",
+  "theme_color": "#0a66c2",
+  "icons": [
+    { "src": "./icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./icons/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,179 @@
+/* Menu Card Catalogue — app styles. Mobile-friendly; table collapses to cards on narrow screens. */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 { font-size: var(--fs-xl); margin: 0 0 var(--space-2); }
+h2 { font-size: var(--fs-lg); }
+.muted { color: var(--text-light); }
+.form-error { color: var(--danger); }
+
+/* ---- header ---- */
+.app-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+}
+.app-header-left { display: flex; align-items: center; gap: var(--space-3); }
+.app-logo {
+  display: inline-grid; place-items: center;
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  background: var(--primary); color: var(--primary-contrast);
+  font-weight: 700; font-size: 0.8rem; letter-spacing: 0.5px;
+}
+.app-title { font-weight: 600; }
+
+.app-main {
+  flex: 1;
+  width: 100%; max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-5);
+}
+
+/* ---- buttons ---- */
+.btn-primary, .btn-ghost {
+  font: inherit; cursor: pointer;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+.btn-primary { background: var(--primary); color: var(--primary-contrast); }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-primary:disabled { opacity: 0.6; cursor: default; }
+.btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* ---- card ---- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  padding: var(--space-5);
+}
+
+.badge {
+  display: inline-block;
+  padding: 1px 8px; font-size: var(--fs-sm);
+  border: 1px solid var(--border); border-radius: 999px;
+  color: var(--text-light);
+}
+
+/* ---- upload ---- */
+.upload-card { max-width: 640px; margin: var(--space-6) auto; }
+.dropzone {
+  margin-top: var(--space-4);
+  border: 2px dashed var(--border); border-radius: var(--radius);
+  background: var(--surface-2);
+  padding: var(--space-6);
+  text-align: center; cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+.dropzone:hover, .dropzone.drag { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 6%, var(--surface-2)); }
+.dropzone-inner { display: flex; flex-direction: column; gap: var(--space-2); }
+.import-status { margin-top: var(--space-4); }
+.import-ok { color: var(--success); font-weight: 600; }
+
+/* ---- catalogue head ---- */
+.cat-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: var(--space-4); flex-wrap: wrap; margin-bottom: var(--space-4);
+}
+.cat-head-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+
+/* ---- controls ---- */
+.cat-controls { display: flex; flex-direction: column; gap: var(--space-4); }
+.pill-group { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.pill-label { font-size: var(--fs-sm); color: var(--text-light); min-width: 72px; }
+.pills { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.pill {
+  font: inherit; cursor: pointer;
+  padding: 3px 12px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-light);
+  transition: all var(--transition);
+}
+.pill:hover { border-color: var(--primary); color: var(--primary); }
+.pill.active { background: var(--primary); color: var(--primary-contrast); border-color: var(--primary); }
+
+.cat-search { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.cat-search input[type="search"] {
+  flex: 1; min-width: 180px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg); color: var(--text); font: inherit;
+}
+
+/* ---- data table ---- */
+.data-table { width: 100%; border-collapse: collapse; background: var(--surface); }
+.data-table th, .data-table td {
+  text-align: left; padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+.data-table thead th { font-size: var(--fs-sm); color: var(--text-light); background: var(--surface-2); }
+.data-table tbody tr:hover { background: var(--surface-2); }
+.data-table .num { text-align: right; white-space: nowrap; }
+
+/* ---- detail ---- */
+.cat-detail { margin-top: var(--space-5); }
+.kv { width: 100%; border-collapse: collapse; margin: var(--space-3) 0; }
+.kv th, .kv td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); }
+.kv th { color: var(--text-light); font-weight: 500; width: 40%; }
+
+/* ---- footer ---- */
+.app-footer {
+  margin-top: var(--space-5); padding: var(--space-4) 0 var(--space-3);
+  border-top: 1px solid var(--border); text-align: center;
+  color: var(--text-light); font-size: 0.72rem; line-height: 1.6;
+  display: flex; flex-direction: column; gap: 0.1rem;
+}
+.app-footer-brand { color: var(--primary); font-weight: 600; letter-spacing: 0.2px; }
+.app-footer-copy { opacity: 0.85; }
+
+/* ============================================================
+   Mobile — collapse the table into stacked cards
+   ============================================================ */
+@media (max-width: 720px) {
+  .app-main { padding: var(--space-4); }
+  .pill-label { min-width: 0; }
+
+  .cat-table thead { display: none; }           /* hide header + filter row on phone */
+  .cat-table, .cat-table tbody, .cat-table tr, .cat-table td { display: block; width: 100%; }
+  .cat-table tr {
+    margin-bottom: var(--space-3);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); box-shadow: var(--shadow-1);
+    padding: var(--space-2) var(--space-3);
+  }
+  .cat-table td {
+    display: flex; justify-content: space-between; gap: var(--space-4);
+    border-bottom: 1px solid var(--border); padding: var(--space-2) 0;
+    text-align: right;
+  }
+  .cat-table td:last-child { border-bottom: 0; }
+  .cat-table td::before {
+    content: attr(data-label);
+    font-size: var(--fs-sm); color: var(--text-light);
+    text-align: left; font-weight: 500;
+  }
+  .cat-table td.num { text-align: right; }
+}
+
+@media print {
+  .no-print, .app-header, .cat-head-actions, .cat-controls, #detail { display: none !important; }
+}

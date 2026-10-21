@@ -1,0 +1,14 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+*.swp
+*.swo
+
+# Temp / verification scratch (never shipped)
+_verify-*.mjs
+_run-*.bat
+*.tmp

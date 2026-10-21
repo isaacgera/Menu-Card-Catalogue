@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Menu Card Catalogue — Overview</title>
+<style>
+  :root{--bg:#f6f7f9;--surface:#fff;--border:#d9dde3;--text:#1a2430;--muted:#5a6675;--primary:#0a66c2;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12171e;--surface:#1a212b;--border:#2e3844;--text:#e8edf3;--muted:#a9b4c0;--primary:#4a9eea;}}
+  *{box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;max-width:820px;margin:0 auto;padding:1.5rem}
+  h1{color:var(--primary);font-size:1.6rem;margin-bottom:.2rem}
+  .sub{color:var(--muted);margin-bottom:1.2rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1rem 0}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;box-shadow:0 1px 3px rgba(16,24,40,.08)}
+  .card h3{margin:0 0 .4rem;font-size:1rem;color:var(--primary)}
+  .card p{margin:0;color:var(--muted);font-size:.9rem}
+  footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:.75rem}
+  footer .brand{color:var(--primary);font-weight:600;display:block}
+</style>
+</head>
+<body>
+  <h1>Menu Card Catalogue</h1>
+  <div class="sub">A standalone, installable tool for viewing the middleware Menu Card as a Product Catalogue.</div>
+
+  <div class="card">
+    <p>Import the Menu Card Excel workbook and the app turns it into a clean, searchable catalogue
+    of every middleware service — with its effort and cost figures read straight from the
+    workbook. It runs entirely in your browser: no server, no sign-in, nothing uploaded. Spun out
+    of the Middleware Delivery Portal so the "just let me see the catalogue" job stays simple.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h3>Import in a click</h3><p>Drop or choose the Menu Card .xlsx. It's parsed on your device in a moment — no upload.</p></div>
+    <div class="card"><h3>Search &amp; filter</h3><p>Component and size pills, a search box across every column, and per-column filters.</p></div>
+    <div class="card"><h3>Faithful figures</h3><p>PD, Story Points, TCS / FTE / Total cost shown exactly as the approved Menu Card has them.</p></div>
+    <div class="card"><h3>Save as PDF</h3><p>Export the whole catalogue to a PDF — download on desktop, share sheet on mobile.</p></div>
+    <div class="card"><h3>Installable PWA</h3><p>Install it on your laptop or phone; it works offline after the first load.</p></div>
+    <div class="card"><h3>Mobile-friendly</h3><p>On a phone the table becomes neat stacked cards. Light and dark themes included.</p></div>
+  </div>
+
+  <footer>
+    <span class="brand">Powered by Forjé</span>
+    © 2026 Isaac A Gera. All rights reserved.
+  </footer>
+</body>
+</html>

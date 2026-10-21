@@ -1,0 +1,77 @@
+/* Design tokens — colour, spacing, radius, shadow, motion. Light + dark via
+   prefers-color-scheme + manual toggle; honours reduced-motion. Shared with the MDP look. */
+
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f0f2f5;
+  --border: #d9dde3;
+  --text: #1a2430;
+  --text-light: #5a6675;
+  --muted: #8a94a3;
+
+  --primary: #0a66c2;
+  --primary-hover: #0954a0;
+  --primary-contrast: #ffffff;
+
+  --success: #1f8a4c;
+  --warning: #b8860b;
+  --danger: #c0392b;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+  --shadow-2: 0 4px 8px rgba(16, 24, 40, 0.08), 0 2px 4px rgba(16, 24, 40, 0.06);
+
+  --font-sans: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  --fs-sm: 0.82rem;
+  --fs-base: 0.95rem;
+  --fs-lg: 1.15rem;
+  --fs-xl: 1.5rem;
+
+  --transition: 160ms ease-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #12171e;
+    --surface: #1a212b;
+    --surface-2: #222b36;
+    --border: #2e3844;
+    --text: #e8edf3;
+    --text-light: #a9b4c0;
+    --muted: #76828f;
+    --primary: #4a9eea;
+    --primary-hover: #68b0f0;
+    --primary-contrast: #0b1016;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 4px 8px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #12171e;
+  --surface: #1a212b;
+  --surface-2: #222b36;
+  --border: #2e3844;
+  --text: #e8edf3;
+  --text-light: #a9b4c0;
+  --muted: #76828f;
+  --primary: #4a9eea;
+  --primary-hover: #68b0f0;
+  --primary-contrast: #0b1016;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 4px 8px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --transition: 0ms; }
+}

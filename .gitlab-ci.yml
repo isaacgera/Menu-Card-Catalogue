@@ -1,0 +1,17 @@
+image: alpine:latest
+
+# GitLab Pages deploy. This app (unlike the flat Idea Board) has subfolders
+# (js/ styles/ icons/ vendor/), so we copy the whole tree into public/ preserving
+# structure, then drop the repo/doc files that don't belong on the live site.
+pages:
+  stage: deploy
+  tags:
+    - mobius_shared_runner_cloud
+  script:
+    - mkdir -p public
+    - cp -r index.html manifest.webmanifest sw.js js styles icons vendor public/
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
