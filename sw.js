@@ -7,7 +7,7 @@
  * Bump CACHE_NAME on every release so clients pick up new assets (a cache-first SW otherwise
  * keeps serving stale files). On iPhone, fully close + reopen the installed app after an update.
  */
-const CACHE_NAME = 'mcc-v5';
+const CACHE_NAME = 'mcc-v6';
 
 const CORE = [
   './',
@@ -24,8 +24,6 @@ const CORE = [
 
 const OPTIONAL = [
   './vendor/jspdf.umd.min.js',
-  './icons/icon.svg',
-  './icons/icon-maskable.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable.png',
