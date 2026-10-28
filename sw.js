@@ -7,7 +7,7 @@
  * Bump CACHE_NAME on every release so clients pick up new assets (a cache-first SW otherwise
  * keeps serving stale files). On iPhone, fully close + reopen the installed app after an update.
  */
-const CACHE_NAME = 'mcc-v4';
+const CACHE_NAME = 'mcc-v5';
 
 const CORE = [
   './',
@@ -26,7 +26,12 @@ const OPTIONAL = [
   './vendor/jspdf.umd.min.js',
   './icons/icon.svg',
   './icons/icon-maskable.svg',
-  './data/Middleware_Menu_Card.xlsx', // bundled Menu Card (auto-loaded); may not exist — best-effort
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/icon-maskable.png',
+  './screenshots/screenshot-wide.png',
+  './screenshots/screenshot-narrow.png',
+  './data/Middleware_Menu_Card.xlsx',
 ];
 
 // The bundled Menu Card is served NETWORK-FIRST so a newly dropped-in card is picked up on the

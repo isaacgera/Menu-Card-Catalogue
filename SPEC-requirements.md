@@ -2,7 +2,7 @@
 
 - **Project:** Menu Card Catalogue
 - **Tier / Category:** Medium / Work
-- **Status:** Deployed to 3 remotes (Pages live); v1.1 bundled auto-load + v1.1.1 Re-import fix — awaiting live-site sign-off
+- **Status:** Built (v1.1.1) — deployed to 3 remotes, Pages live on all three, signed off by Isaac
 - **Version:** 1.1.1
 - **Owner / Copyright:** Isaac A Gera
 - **Last updated:** 2026-10-21

@@ -2,12 +2,43 @@
 
 - **Category:** Work
 - **Complexity tier:** Medium
-- **Status:** In Progress (v1 code-complete + logic-verified; awaiting Isaac's browser/install sign-off)
+- **Status:** Built (Menu Card Catalogue v1.1.1) — signed off by Isaac
 - **Copyright holder:** Isaac A Gera
 - **Stack:** vanilla HTML/CSS/JS, no build step, no server; one vendored lib (jsPDF). Installable PWA.
 
 Companion to `SPEC-requirements.md`, `SPEC-design.md`, `SPEC-tasks.md` and the `Ideas.md` row.
 Newest entries at the top.
+
+---
+
+## 2026-10-22 — Sign-off: Built (Menu Card Catalogue v1.1.1)
+
+Isaac confirmed both outstanding items on the live sites:
+1. ✅ **Auto-load** — the bundled V5 Menu Card (`data/Middleware_Menu_Card.xlsx`) loads
+   automatically on open; 38 services across MQ/WLS/CFT/WFY displayed without any upload.
+2. ✅ **Re-import fix** — clicking Re-import now shows the upload screen with a working file
+   picker (and a "← Back to catalogue" cancel link).
+
+**Backlog row flipped to `Built (Menu Card Catalogue v1.1.1)`** in `Ideas.md`.
+
+The app is fully shipped: deployed to personal GitLab Pages, team GitLab Pages, and GitHub
+Pages; all three remotes on commit `fb53a14`; `git pushall` keeps them in sync going forward.
+
+### What shipped (complete feature set at v1.1.1)
+- In-browser parse of the real V5 Menu Card workbook (dependency-free — no SheetJS)
+- **Component-agnostic** — any tabs beyond MQ/WLS/CFT/WildFly are parsed automatically
+- **Auto-load** — bundled `data/Middleware_Menu_Card.xlsx` loads on first open (precedence c:
+  user uploads take priority; a newer bundled card auto-refreshes anyone on the old one)
+- Searchable/filterable Product Catalogue (Component + Size pills, generic search)
+- Per-service detail panel, mobile card layout (≤720px)
+- **Save as PDF** — full catalogue, adaptive delivery (download desktop / share mobile)
+- Installable PWA, offline-capable, light/dark theme
+- Re-import — working file picker with Back link; source badge (Bundled / Uploaded)
+- Deployed to 3 remotes; Pages live on all three
+
+### MDP status (parked)
+MDP is **In Progress** — Stages 0–5 + Requests UX pass code-complete; awaiting Isaac's browser
+sign-off on the Requests area. Restart the server fresh when picking MDP back up.
 
 ---
 

@@ -9,7 +9,7 @@ pages:
     - mobius_shared_runner_cloud
   script:
     - mkdir -p public
-    - cp -r index.html manifest.webmanifest sw.js js styles icons vendor public/
+    - cp -r index.html manifest.webmanifest sw.js js styles icons vendor screenshots public/
     # the bundled Menu Card (data/) auto-loads for users; include it if present
     - if [ -d data ]; then cp -r data public/; fi
   artifacts:
