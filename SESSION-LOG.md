@@ -32,8 +32,17 @@ reference spotted while in the header markup:
   rounded, themes correctly in light/dark.
 - `sw.js` — `CACHE_NAME` bumped `mcc-v7` → `mcc-v8` so clients pick up the badge + icon fix.
 
-`node --check` passes on `app.js` and `sw.js`. To ship: commit + `git pushall`; then
-hard-refresh / reopen the installed PWA so the `mcc-v8` worker activates and the badge appears.
+`node --check` passes on `app.js` and `sw.js`.
+
+### Shipped + signed off
+Committed as `f264650` and pushed to all three remotes (`origin`, `team`, `github`) — all refs
+confirmed in step. Isaac hard-refreshed the live site, confirmed the **`v1.2.2` badge** shows
+and the app looks good. **Menu Card Catalogue is clean and current at v1.2.2.** The version
+badge is now the at-a-glance "am I on the latest?" signal.
+
+Housekeeping note: `Ideas.md` backlog row is `Built (Menu Card Catalogue v1.2.2)`; that edit
+collided with a remote mobile edit earlier this session and was reconciled via rebase (kept the
+versioned status) — Ideas repo is clean and synced.
 
 ---
 

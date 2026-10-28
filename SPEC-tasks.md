@@ -2,7 +2,7 @@
 
 - **Project:** Menu Card Catalogue
 - **Companion docs:** `SPEC-requirements.md`, `SPEC-design.md`
-- **Last updated:** 2026-10-21 (v1 code-complete; awaiting browser/install sign-off)
+- **Last updated:** 2026-10-28 (shipped v1.2.2; signed off by Isaac)
 
 **Legend:** `[ ]` not started · `[~]` in progress · `[x]` done
 
@@ -42,9 +42,19 @@ Serve the folder over HTTP (PWA features don't work from `file://`), e.g.:
 8. Install as a PWA (desktop + phone); reload offline → still works.
 9. Toggle light/dark; refresh → catalogue persists.
 
+## Post-ship maintenance (v1.1.1 → v1.2.2)
+- [x] **v1.2.0** — PNG manifest icons (192/512/maskable) + screenshots; fixed Chrome manifest
+  warnings. SW `mcc-v5`.
+- [x] **v1.2.1** — removed the now-unused SVG icons (source of 404 warnings); manifest panel
+  clean. SW `mcc-v6`.
+- [x] **v1.2.2** — Lighthouse pass → **99 / 100 / 100 / 100** on live GitHub Pages:
+  - CLS 0.71 → fixed (`min-height` on `.app-main`).
+  - Footer contrast 3.96:1 → ~5.17:1 (removed `.app-footer-copy` opacity).
+  - Non-composited animation → fixed (dropped `border-color` from the button transition).
+  - Version badge (`v1.2.2`) added next to the title; `APP_VERSION` corrected 1.1.1 → 1.2.2.
+  - Fixed a dead favicon `<link>` (deleted SVG → `icon-192.png`). SW `mcc-v8`.
+
 ## Later / nice-to-have
-- [ ] PNG manifest icons (192/512/maskable) for broader install-icon support (esp. older iOS);
-  SVG icons are in place now.
 - [ ] Optional per-component sub-totals or a summary row.
 - [ ] Multiple stored versions / history (currently a single current catalogue).
 
