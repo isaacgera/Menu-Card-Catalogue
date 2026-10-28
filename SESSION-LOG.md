@@ -2,12 +2,63 @@
 
 - **Category:** Work
 - **Complexity tier:** Medium
-- **Status:** Built (Menu Card Catalogue v1.1.1) — signed off by Isaac
+- **Status:** Built (Menu Card Catalogue v1.2.2) — signed off by Isaac
 - **Copyright holder:** Isaac A Gera
 - **Stack:** vanilla HTML/CSS/JS, no build step, no server; one vendored lib (jsPDF). Installable PWA.
 
 Companion to `SPEC-requirements.md`, `SPEC-design.md`, `SPEC-tasks.md` and the `Ideas.md` row.
 Newest entries at the top.
+
+---
+
+## 2026-10-28 — v1.2.2: Lighthouse fixes (CLS, footer contrast, non-composited animation)
+
+Isaac ran a Lighthouse audit on the live GitHub Pages site and asked me to go through the
+report. Scores were: **Performance 77**, Accessibility 95, Best Practices 100, SEO 100.
+Three actionable issues found and fixed (a fourth — render-blocking CSS — was negligible
+at 63 KB total / 0.3 s FCP, so left alone):
+
+### 1. CLS 0.71 → fixed (the main score-killer)
+- **Element:** `body > main#view` (the `.app-main` container)
+- **Cause:** the bundled Menu Card loads asynchronously; the initial "Loading…" state had no
+  reserved height, so when the catalogue table rendered the entire viewport reflowed.
+- **Fix:** added `min-height: 60vh` to `.app-main` in `styles/app.css` so the loading state
+  reserves space and the content settles in without a large layout shift.
+
+### 2. Accessibility: footer contrast 3.96:1 → fixed (now ~5.17:1)
+- **Element:** `body > footer.app-footer > span.app-footer-copy`
+- **Cause:** `.app-footer-copy` had `opacity: 0.85`, which blended `--text-light` (`#5a6675`)
+  with the `--bg` (`#f6f7f9`) background to an effective `#717c89` — below the 4.5:1 threshold.
+- **Fix:** removed the `opacity: 0.85` declaration. Full-opacity `#5a6675` on `#f6f7f9` gives
+  ~5.17:1, comfortably passing WCAG AA. Dark theme unaffected (`--text-light: #a9b4c0` on
+  `#12171e` is already well above threshold).
+
+### 3. Non-composited animation → fixed
+- **Element:** `button#theme-toggle` (`.btn-ghost`)
+- **Cause:** the `border-color` transition on `.btn-ghost` hover isn't GPU-composited (border
+  properties can't run on the compositor thread), causing potential jank.
+- **Fix:** removed `border-color` from the `transition` shorthand on `.btn-primary, .btn-ghost`.
+  The border still changes colour on hover (snaps instead of animating) — invisible difference
+  for a 1px border. Kept `background` and `transform` transitions (both compositor-friendly).
+
+### 4. Render-blocking CSS — NOT fixed (negligible)
+- `tokens.css` (923 B) and `app.css` (2 KB) both block render. FCP is already 0.3 s and the total
+  page weight is 63 KB. Inlining or deferring would add complexity for no measurable gain.
+
+### SW cache bump
+`CACHE_NAME` bumped `mcc-v6` → `mcc-v7` so deployed clients pick up the updated CSS.
+
+### Verified / shipped
+- `node --check sw.js` passes.
+- Committed as `1c64aec` and pushed to all three remotes (`origin`, `team`, `github`) —
+  confirmed via `git log --all --decorate` showing all remote refs on `1c64aec`.
+- **Isaac to do:** hard-refresh the live site (or fully close + reopen the installed PWA on
+  iPhone) so the `mcc-v7` service worker activates, then re-run Lighthouse to confirm the CLS
+  score has dropped and the contrast / animation warnings are gone.
+
+### Files changed
+- `styles/app.css` — three CSS fixes (min-height, opacity removal, transition trim).
+- `sw.js` — `CACHE_NAME` bump.
 
 ---
 
@@ -252,3 +303,13 @@ Five Chrome DevTools manifest warnings addressed:
 - Generator scripts deleted after running (temporary).
 
 All changed JS passes `node --check`. Committed + pushed to all three remotes (mcc-v5).
+
+## 2026-10-22 (later) — v1.2.1 closed out; SVG icons removed
+
+- Isaac deleted `icons/icon.svg` and `icons/icon-maskable.svg` directly (they were unused after
+  the PNG migration and were the source of the earlier 404 warnings).
+- Committed and pushed via `git pushall` — all three remotes in step.
+- Confirmed on the live site: `caches.keys()` returns `mcc-v6` (latest SW active) and the
+  DevTools **Manifest** panel shows **zero errors or warnings**.
+
+**Menu Card Catalogue is fully resolved and clean at v1.2.1.**
