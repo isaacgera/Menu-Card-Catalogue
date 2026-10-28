@@ -11,6 +11,32 @@ Newest entries at the top.
 
 ---
 
+## 2026-10-28 (later) — v1.2.2 verified + version badge added
+
+### Lighthouse re-run — confirmed on the live GitHub Pages site
+Isaac re-ran Lighthouse against https://isaacgera.github.io/Menu-Card-Catalogue/ after the
+v1.2.2 deploy. Result: **Performance 99** (was 77), **Accessibility 100** (was 95),
+**Best Practices 100**, **SEO 100**. The CLS and contrast fixes both landed — the improved
+scores can only come from the new CSS, so the `mcc-v7` assets are confirmed live.
+
+### Follow-up tweaks (still v1.2.2)
+On Isaac's request, added a small **version badge** next to the app title, and fixed a stale
+reference spotted while in the header markup:
+- `index.html` — added `<span id="app-version" class="app-version">` after `.app-title`;
+  **fixed the dead `<link rel="icon" href="./icons/icon.svg">`** (that SVG was deleted at
+  v1.2.1) → now points to `./icons/icon-192.png`.
+- `js/app.js` — **bumped `APP_VERSION` 1.1.1 → 1.2.2** (it had been left behind through the
+  v1.2.x releases) and added `showVersion()` (called first in `boot()`) that writes
+  `v{APP_VERSION}` into the badge — single source of truth, same pattern as MathFun.
+- `styles/app.css` — `.app-version` pill: tokenised (`--text-light`, `--border`), small,
+  rounded, themes correctly in light/dark.
+- `sw.js` — `CACHE_NAME` bumped `mcc-v7` → `mcc-v8` so clients pick up the badge + icon fix.
+
+`node --check` passes on `app.js` and `sw.js`. To ship: commit + `git pushall`; then
+hard-refresh / reopen the installed PWA so the `mcc-v8` worker activates and the badge appears.
+
+---
+
 ## 2026-10-28 — v1.2.2: Lighthouse fixes (CLS, footer contrast, non-composited animation)
 
 Isaac ran a Lighthouse audit on the live GitHub Pages site and asked me to go through the

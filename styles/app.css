@@ -35,6 +35,15 @@ h2 { font-size: var(--fs-lg); }
   font-weight: 700; font-size: 0.8rem; letter-spacing: 0.5px;
 }
 .app-title { font-weight: 600; }
+.app-version {
+  font-size: var(--fs-sm);
+  color: var(--text-light);
+  padding: 1px 7px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
 
 .app-main {
   flex: 1;

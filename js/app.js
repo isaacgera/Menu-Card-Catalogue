@@ -7,7 +7,7 @@ import { parseMenuCard, componentLabel, componentPill } from './parser.js';
 import { loadCatalogue, saveCatalogue, clearCatalogue, loadTheme, saveTheme, makeSignature } from './store.js';
 import { exportCataloguePdf } from './pdf.js';
 
-const APP_VERSION = '1.1.1';
+const APP_VERSION = '1.2.2';
 // A Menu Card shipped WITH the app. If present, it auto-loads so users don't each upload one.
 // Drop the current workbook here and redeploy; precedence-(c) picks it up (see boot()).
 const BUNDLED_CARD_URL = './data/Middleware_Menu_Card.xlsx';
@@ -76,6 +76,7 @@ let searchText = '';
 // previously-bundled catalogue; a user's own upload is kept; graceful fallback to upload.
 // ============================================================
 async function boot() {
+  showVersion();
   initTheme();
   registerServiceWorker();
 
@@ -126,6 +127,12 @@ async function fetchBundledCatalogue() {
     source: 'bundled',
     signature: makeSignature(result.version, result.items),
   };
+}
+
+/** Show the app version badge next to the title (single source of truth: APP_VERSION). */
+function showVersion() {
+  const el = $('#app-version');
+  if (el) el.textContent = 'v' + APP_VERSION;
 }
 
 function initTheme() {
