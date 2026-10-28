@@ -227,3 +227,28 @@ auto-load + the Re-import fix; then → **Built (Menu Card Catalogue v1.1.1)**.
 
 > Session paused here (monthly credits). Next time: pull latest, confirm the three live sites
 > auto-load the bundled card and that Re-import now shows the picker, then flip the backlog to Built.
+
+## 2026-10-22 (later) — v1.2.0: fix manifest warnings (PNG icons + screenshots)
+
+Five Chrome DevTools manifest warnings addressed:
+
+1. **Icon SVG 404s** — `icon.svg` and `icon-maskable.svg` were failing to load in Chrome's
+   manifest validator (CORS/MIME issue on the GitLab Pages host). Fixed by generating proper
+   **PNG icons** using only Node built-ins (no npm/canvas — raw RGBA pixel data → zlib deflate →
+   PNG encoder written from scratch). SVGs kept as fallback entries.
+2. **"Most operating systems require square icons"** — resolved by the new 192×192 and 512×512
+   PNGs, which Chrome recognises as square icons.
+3. **Richer install UI (desktop + mobile)** — added a `screenshots` array to the manifest with
+   a 1280×720 wide screenshot and a 390×844 narrow screenshot (also generated as placeholder
+   PNGs). These enable Chrome's richer install UI preview on both form factors.
+
+**Files added/changed:**
+- `icons/icon-192.png`, `icons/icon-512.png`, `icons/icon-maskable.png` — generated PNGs.
+- `screenshots/screenshot-wide.png` (1280×720), `screenshots/screenshot-narrow.png` (390×844).
+- `manifest.webmanifest` — PNG icons as primary entries (SVGs as fallback) + `screenshots` array.
+- `index.html` — apple-touch-icon updated to use `icon-192.png`.
+- `sw.js` — `CACHE_NAME` → `mcc-v5`; new assets added to OPTIONAL precache.
+- `.gitlab-ci.yml` — `screenshots/` included in the Pages deploy copy.
+- Generator scripts deleted after running (temporary).
+
+All changed JS passes `node --check`. Committed + pushed to all three remotes (mcc-v5).
