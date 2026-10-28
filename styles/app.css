@@ -41,6 +41,7 @@ h2 { font-size: var(--fs-lg); }
   width: 100%; max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-5);
+  min-height: 60vh; /* reserve space during async load to prevent CLS */
 }
 
 /* ---- buttons ---- */
@@ -49,7 +50,7 @@ h2 { font-size: var(--fs-lg); }
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
-  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+  transition: background var(--transition), transform var(--transition);
 }
 .btn-primary { background: var(--primary); color: var(--primary-contrast); }
 .btn-primary:hover { background: var(--primary-hover); }
@@ -143,7 +144,6 @@ h2 { font-size: var(--fs-lg); }
   display: flex; flex-direction: column; gap: 0.1rem;
 }
 .app-footer-brand { color: var(--primary); font-weight: 600; letter-spacing: 0.2px; }
-.app-footer-copy { opacity: 0.85; }
 
 /* ============================================================
    Mobile — collapse the table into stacked cards
